@@ -472,7 +472,7 @@ void Snapdragon::CameraManager::updateFPS( int64_t desired_fps ){
   {
     std::lock_guard<std::mutex> lock( frame_mutex_ );
     if (fps_index != -1){
-      INFO_PRINT("Setting FPS to %d", desired_fps);
+      std::cout << "Setting FPS to " <<  desired_fps << std::endl;
       params_.setPreviewFpsRange(preview_fps_ranges[fps_index]);
     }
 
@@ -486,7 +486,7 @@ void Snapdragon::CameraManager::updateFPS( int64_t desired_fps ){
         }
       }
       
-      ERROR_PRINT("Invalid FPS value of %d. Using closest value of %d", desired_fps, preview_fps_ranges[closest_index]);
+      std::cout << "Invalid FPS value of" << desired_fps << ". Using closest value of " <<  available_values[closest_index] << std::endl;
       params_.setPreviewFpsRange(preview_fps_ranges[closest_index]);
     }
   }

@@ -335,7 +335,7 @@ void Snapdragon::RosNode::Vislam::fpsCbFunction( snap_ros_examples::SnapdragonCo
 
     if (config.dr_fps_value != vislam_dyn_rec_->current_fps_){
       // TODO: Actually set the FPS value
-      vislam_manager_->cam_man_ptr_->updateFPS(config.dr_fps_value);
+      vislam_manager_.cam_man_ptr_->updateFPS(config.dr_fps_value);
 
       vislam_dyn_rec_->current_fps_ = config.dr_fps_value;
       ROS_INFO_STREAM("Just set a new FPS value!");

@@ -189,6 +189,8 @@ int32_t Snapdragon::CameraManager::Initialize(int64_t desired_fps, bool default_
 }
 
 int32_t Snapdragon::CameraManager::Terminate() {
+  std::cout << "Stepping inside of terminate" << std::endl;
+  std::cout << (camera_ptr_ == nullptr) << std::endl;
   if( camera_ptr_ != nullptr ) {
     INFO_PRINT("Starting to terminate.");
     // remove this as a listener.

@@ -192,10 +192,11 @@ int32_t Snapdragon::CameraManager::Terminate() {
   std::cout << "Stepping inside of terminate" << std::endl;
   std::cout << (camera_ptr_ == nullptr) << std::endl;
   if( camera_ptr_ != nullptr ) {
-    INFO_PRINT("Starting to terminate.");
+    std::cout << ("Starting to terminate.") << std::endl;
     // remove this as a listener.
     camera_ptr_->removeListener( this );
     //stop the camera.
+    std::cout << "rm listener" << std::endl;
     Stop();
     //delete the camera ptr
     camera::ICameraDevice::deleteInstance(&camera_ptr_);
@@ -489,7 +490,7 @@ void Snapdragon::CameraManager::onVideoFrame(camera::ICameraFrame* frame)
 }
 
 void Snapdragon::CameraManager::updateFPS( int64_t desired_fps ){
-  INFO_PRINT("Attempting to set %i as desired_fps", % (desired_fps));
+  std::cout << "attempting to set desired fps: " << desired_fps << std::endl;
   Terminate();
   INFO_PRINT("Finished termination");
   Initialize(desired_fps, true);

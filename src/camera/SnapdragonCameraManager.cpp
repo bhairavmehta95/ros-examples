@@ -487,6 +487,7 @@ void Snapdragon::CameraManager::onVideoFrame(camera::ICameraFrame* frame)
 }
 
 void Snapdragon::CameraManager::updateFPS( int64_t desired_fps ){
+  INFO_PRINT("Attempting to set %i as desired_fps", % (desired_fps));
   Terminate();
   INFO_PRINT("Finished termination");
   Initialize(desired_fps, true);

@@ -100,7 +100,7 @@ public:
    * Callback to change FPS
    */
 
-  void fpsCbFunction( snap_ros_examples::SnapdragonConfig &config, int32_t desired_fps );  
+  void fpsCbFunction( snap_ros_examples::SnapdragonConfig &config, uint32_t level );  
   /**
    * Destructor for the node.
    */
@@ -128,13 +128,13 @@ private:
   dynamic_reconfigure::Server<snap_ros_examples::SnapdragonConfig>::CallbackType fpsCb;
 
   Snapdragon::VislamManager vislam_manager_;
-  Snapdragon::Vislam::VislamDynRec vislam_dyn_rec_;
+  Snapdragon::RosNode::VislamDynRec* vislam_dyn_rec_;
 };
 
 /**
  * Class to hold dynamic reconfig's current values
  */
-class Snapdragon::Vislam::VislamDynRec
+class Snapdragon::RosNode::VislamDynRec
 {
 
 public:

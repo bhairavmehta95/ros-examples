@@ -76,7 +76,7 @@ Snapdragon::CameraManager::CameraManager( Snapdragon::CameraParameters* params_p
   mvCPA_ptr_ = NULL;
 }
 
-int32_t Snapdragon::CameraManager::Initialize(int64_t desired_fps = -1, bool default_ctor = true){
+int32_t Snapdragon::CameraManager::Initialize(int64_t desired_fps, bool default_ctor){
   if (!initialized_) {
     if (desired_fps == -1){
       desired_fps = camera_config_ptr_->fps;

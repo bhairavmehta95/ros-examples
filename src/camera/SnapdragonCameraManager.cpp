@@ -478,7 +478,7 @@ void Snapdragon::CameraManager::updateFPS( int64_t desired_fps ){
 
     else{
       int closest_index = 0;
-      abs_difference = abs(desired_fps - available_values[0]); 
+      int abs_difference = abs(desired_fps - available_values[0]); 
       for (int i = 1; i < available_values.size(); ++i){
         if (abs(desired_fps - available_values[i]) < abs_difference){
           closest_index = i;

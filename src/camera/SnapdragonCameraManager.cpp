@@ -456,10 +456,12 @@ void Snapdragon::CameraManager::onVideoFrame(camera::ICameraFrame* frame)
 void Snapdragon::CameraManager::updateFPS( int64_t desired_fps ){
   // For Reference:
   std::vector<int> available_values {15, 24, 30, 60, 90, 120}; 
-
+  std::cout << "Stepping in\n";
   // Check desired FPS against supported FPS values
-  std::vector<camera::Range> preview_fps_ranges = params_.getSupportedPreviewFpsRanges();
+  // std::vector<camera::Range> preview_fps_ranges = params_.getSupportedPreviewFpsRanges();
   int fps_index = -1;
+  //std::cout << "Preview FPS ArrSize:" << preview_fps_ranges.size() << std::endl;
+  /*
   for (unsigned int ii = 0; ii < preview_fps_ranges.size(); ++ii) {
     // std::cout << ii << ": [ " << preview_fps_ranges[ii].min << ", "\
     // << preview_fps_ranges[ii].max << " ] " << std::endl;
@@ -468,12 +470,15 @@ void Snapdragon::CameraManager::updateFPS( int64_t desired_fps ){
       fps_index = static_cast<int>(ii);
     }
   }
-
+  */
+  if (fps_index == -1) std::cout << "Couldn't find desired, trying to LOCK\n";
+  else std::cout << "FPS Index is still -1\n";
   {
     std::lock_guard<std::mutex> lock( frame_mutex_ );
+    std::cout << "Just locked...\n";
     if (fps_index != -1){
       std::cout << "Setting FPS to " <<  desired_fps << std::endl;
-      params_.setPreviewFpsRange(preview_fps_ranges[fps_index]);
+      //params_.setPreviewFpsRange(preview_fps_ranges[fps_index]);
     }
 
     else{
@@ -487,7 +492,7 @@ void Snapdragon::CameraManager::updateFPS( int64_t desired_fps ){
       }
       
       std::cout << "Invalid FPS value of" << desired_fps << ". Using closest value of " <<  available_values[closest_index] << std::endl;
-      params_.setPreviewFpsRange(preview_fps_ranges[closest_index]);
+      //params_.setPreviewFpsRange(available_values[closest_index] * 1000);
     }
   }
 }

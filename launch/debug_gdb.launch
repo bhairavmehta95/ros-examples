@@ -1,0 +1,3 @@
+<launch>
+	<node name="snap_vislam_node_debug" pkg="snap_ros_examples" launch-prefix="gdb -ex run --args" type="snap_vislam_node" />
+</launch>

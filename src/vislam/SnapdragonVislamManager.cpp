@@ -249,6 +249,17 @@ int32_t Snapdragon::VislamManager::GetPose( mvVISLAMPose& pose, int64_t& pose_fr
   uint32_t used = 0;
   uint64_t frame_ts_ns;
   static int64_t prev_frame_id = 0;
+  // TODO:
+  
+  /*
+  function to return data object that is used
+    
+  Requires: frame_id, frame_ts_ns, image_buffer_, image_buffer_size_bytes_, CV::Mat Reference
+  Extracts image data, loads it into cv::Mat using cv_bridge (use the size in bytes and pass dimensions if needed)
+    Dimensions can be found in the config pointer
+
+  */
+
   rc = cam_man_ptr_->GetNextImageData( &frame_id, &frame_ts_ns, image_buffer_, image_buffer_size_bytes_ , &used );
 
   if( rc != 0 ) {

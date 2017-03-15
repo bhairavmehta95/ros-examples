@@ -38,6 +38,9 @@
 #include <string>
 #include <chrono>
 
+// TODO: Add implementation here, add declaration in header
+
+
 Snapdragon::CameraManager::CameraManager( Snapdragon::CameraParameters* params_ptr) {
   initialized_ = false;
   running_     = false;

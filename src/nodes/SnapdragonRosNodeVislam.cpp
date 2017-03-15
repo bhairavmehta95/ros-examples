@@ -85,7 +85,7 @@ int32_t Snapdragon::RosNode::Vislam::Stop() {
 }
 
 void Snapdragon::RosNode::Vislam::ThreadMain() {
- mvCameraConfiguration config;
+  mvCameraConfiguration config;
   // Set up camera configuraiton (snapdragon down facing camera)
   memset(&config, 0, sizeof(config));
   config.pixelWidth = 640;
@@ -182,7 +182,7 @@ void Snapdragon::RosNode::Vislam::ThreadMain() {
   while( !thread_stop_ ) {
     // TODO: Pass in image dimensions and other size related things
     
-    vislam_ret = vislam_man.GetPose( vislamPose, vislamFrameId, timestamp_ns );
+    vislam_ret = vislam_man.GetPose( vislamPose, vislamFrameId, timestamp_ns, config.pixelWidth, config.pixelHeight );
     if( vislam_ret == 0 ) {
       //check if the pose quality is good.  If not do not publish the data.
       if( vislamPose.poseQuality != MV_TRACKING_STATE_FAILED  && 

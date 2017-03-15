@@ -235,7 +235,7 @@ int32_t Snapdragon::VislamManager::Imu_IEventListener_ProcessSamples( sensor_imu
   return rc;
 }
 
-int32_t Snapdragon::VislamManager::GetPose( mvVISLAMPose& pose, int64_t& pose_frame_id, uint64_t timestamp_ns ) {
+int32_t Snapdragon::VislamManager::GetPose( mvVISLAMPose& pose, int64_t& pose_frame_id, uint64_t timestamp_ns, int32_t pixelWidth, int32_t pixelHeight ) {
   int32_t rc = 0;
   if( !initialized_ ) {
     WARN_PRINT( "VislamManager not initialize" );
@@ -259,6 +259,13 @@ int32_t Snapdragon::VislamManager::GetPose( mvVISLAMPose& pose, int64_t& pose_fr
     Dimensions can be found in the config pointer
 
   */
+
+  // TODO: Declare CV_MAT, include correct header files
+  // Forward declare GetImageData
+  // Implement GetImageData
+
+  cam_man_ptr_->GetImageData( &cv_mat, &frame_id, &frame_ts_ns, image_buffer_, image_buffer_size_bytes_, pixelWidth, pixelHeight);
+
 
   rc = cam_man_ptr_->GetNextImageData( &frame_id, &frame_ts_ns, image_buffer_, image_buffer_size_bytes_ , &used );
 

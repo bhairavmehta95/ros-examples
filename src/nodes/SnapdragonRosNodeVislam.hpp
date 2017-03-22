@@ -38,6 +38,9 @@
 #include <mvVISLAM.h>
 #include "SnapdragonVislamManager.hpp"
 
+// Custom Includes
+#include <opencv2/core/core.hpp>
+
 /**
  * Wrapper Ros Node to support VISLAM from Snapdragon flight platform.
  */
@@ -93,7 +96,10 @@ private:
 
   // class methods
   int32_t PublishVislamData( mvVISLAMPose& vislamPose, int64_t vislamFrameId, uint64_t timestamp_ns );
+  void PublishImageData( cv::Mat& image_mat ); 
+
   void ThreadMain();
+
 
   // data members;
   std::thread       vislam_process_thread_;
@@ -103,5 +109,6 @@ private:
   ros::NodeHandle  nh_;
   ros::Publisher   pub_vislam_pose_;
   ros::Publisher   pub_vislam_odometry_;
+  ros::Publisher   pub_vislam_image_;
   Snapdragon::VislamManager vislam_manager_;
 };

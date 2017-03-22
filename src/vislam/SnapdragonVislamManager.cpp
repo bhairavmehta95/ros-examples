@@ -243,7 +243,7 @@ int32_t Snapdragon::VislamManager::Imu_IEventListener_ProcessSamples( sensor_imu
   return rc;
 }
 
-int32_t Snapdragon::VislamManager::GetPose( mvVISLAMPose& pose, int64_t& pose_frame_id, uint64_t timestamp_ns ) {
+int32_t Snapdragon::VislamManager::GetPose( cv::Mat& image_mat, mvVISLAMPose& pose, int64_t& pose_frame_id, uint64_t timestamp_ns ) {
   int32_t rc = 0;
   if( !initialized_ ) {
     WARN_PRINT( "VislamManager not initialize" );
@@ -259,7 +259,6 @@ int32_t Snapdragon::VislamManager::GetPose( mvVISLAMPose& pose, int64_t& pose_fr
   static int64_t prev_frame_id = 0;
 
   // TODO:
-  
   /*
   function to return data object that is used
     
@@ -269,26 +268,16 @@ int32_t Snapdragon::VislamManager::GetPose( mvVISLAMPose& pose, int64_t& pose_fr
 
   */
 
-
-
   uint16_t camera_width = cam_params_.camera_config.pixel_width;
   uint16_t camera_height = cam_params_.camera_config.pixel_height;
-  
-  // create matrix of size <height, width> with 8bit encoding
-  cv::Mat image_mat;(
-    static_cast<int32_t>(camera_height), 
-    static_cast<int32_t>(camera_width), 
-    CV_8UC1
-  );
 
   INFO_PRINT("Pulling Image Data");
-
-
-
   int32_t image_code = cam_man_ptr_->PullImageData( image_mat, &frame_id, &frame_ts_ns, image_buffer_, image_buffer_size_bytes_, camera_width, camera_height );
- 
-  rc = cam_man_ptr_->GetNextImageData( &frame_id, &frame_ts_ns, image_buffer_, image_buffer_size_bytes_ , &used );
+  INFO_PRINT("Successfully pulled Image Data"); 
 
+  rc = cam_man_ptr_->GetNextImageData( &frame_id, &frame_ts_ns, image_buffer_, image_buffer_size_bytes_ , &used );
+  INFO_PRINT("Successfully got next Image data");
+  
   if( rc != 0 ) {
     WARN_PRINT( "Error Getting the image from camera" );
   }
@@ -309,5 +298,6 @@ int32_t Snapdragon::VislamManager::GetPose( mvVISLAMPose& pose, int64_t& pose_fr
       timestamp_ns = static_cast<uint64_t>(modified_timestamp);
     }
   }
+  INFO_PRINT("Successfully returning rc as, %i", rc);
   return rc;
 }

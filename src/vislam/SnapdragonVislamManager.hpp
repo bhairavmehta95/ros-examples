@@ -36,6 +36,9 @@
 #include "SnapdragonImuManager.hpp"
 #include <mutex>
 
+// Custom Includes
+#include <opencv2/core/core.hpp>
+
 namespace Snapdragon {
   class VislamManager;
 }
@@ -127,7 +130,7 @@ public:
    *   0 = success
    *  otherwise = failure.
    **/
-  int32_t GetPose( mvVISLAMPose& pose, int64_t& frame_id, uint64_t timestamp_ns );
+  int32_t GetPose( cv::Mat& image_mat, mvVISLAMPose& pose, int64_t& frame_id, uint64_t timestamp_ns );
 
   /** 
    * MV SDK's wrapper to get the PointCloud data.

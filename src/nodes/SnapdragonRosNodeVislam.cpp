@@ -1,5 +1,4 @@
-/****************************************************************************
- *   Copyright (c) 2016 Ramakrishna Kintada. All rights reserved.
+ /*   Copyright (c) 2016 Ramakrishna Kintada. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -40,10 +39,24 @@
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/buffer.h>
 
+// Custom Includes
+#include <sensor_msgs/Image.h>
+#include <image_transport/image_transport.h>
+#include <cv_bridge/cv_bridge.h>
+#include <sensor_msgs/image_encodings.h>
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
+
+
 Snapdragon::RosNode::Vislam::Vislam( ros::NodeHandle nh ) : nh_(nh)
 {
   pub_vislam_pose_ = nh_.advertise<geometry_msgs::PoseStamped>("vislam/pose",1);
   pub_vislam_odometry_ = nh_.advertise<nav_msgs::Odometry>("vislam/odometry",1);
+  
+  // Adding custom image publisher
+  pub_vislam_image_ = nh_.advertise<sensor_msgs::Image>("vislam/image", 1);
+
   vislam_initialized_ = false;
   thread_started_ = false;
   thread_stop_ = false;
@@ -179,14 +192,29 @@ void Snapdragon::RosNode::Vislam::ThreadMain() {
   uint64_t timestamp_ns;
   thread_stop_ = false;
   int32_t vislam_ret;
+ 
+  // initializing image matrix
+  uint16_t camera_width = 640; 
+  uint16_t camera_height = 480;
+  
+  // create matrix of size <height, width> with 8bit encoding
+  cv::Mat image_mat(
+     static_cast<int32_t>(camera_height), 
+     static_cast<int32_t>(camera_width), 
+     CV_8UC1
+  );
+
   while( !thread_stop_ ) {
-    vislam_ret = vislam_man.GetPose( vislamPose, vislamFrameId, timestamp_ns );
+    vislam_ret = vislam_man.GetPose( image_mat, vislamPose, vislamFrameId, timestamp_ns );
     if( vislam_ret == 0 ) {
       //check if the pose quality is good.  If not do not publish the data.
       if( vislamPose.poseQuality != MV_TRACKING_STATE_FAILED  && 
           vislamPose.poseQuality != MV_TRACKING_STATE_INITIALIZING ) {
           // Publish Pose Data
           PublishVislamData( vislamPose, vislamFrameId, timestamp_ns );
+
+          // Publish Image Data
+          PublishImageData( image_mat );
       }
     }
     else {
@@ -270,6 +298,12 @@ int32_t Snapdragon::RosNode::Vislam::PublishVislamData( mvVISLAMPose& vislamPose
 
   // broadcast transforms
   static tf2_ros::TransformBroadcaster br;
-  br.sendTransform(transforms);     
+  br.sendTransform(transforms);    
+}
+
+void Snapdragon::RosNode::Vislam::PublishImageData(cv::Mat& image_mat){
+  // publish image
+  sensor_msgs::ImagePtr img_msg = cv_bridge::CvImage(std_msgs::Header(), "mono8", image_mat).toImageMsg();
+  pub_vislam_image_.publish(img_msg); 
 }
 

@@ -275,12 +275,11 @@ int32_t Snapdragon::VislamManager::GetPose( mvVISLAMPose& pose, int64_t& pose_fr
   uint16_t camera_height = cam_params_.camera_config.pixel_height;
   
   // create matrix of size <height, width> with 8bit encoding
-  cv::Mat image_mat;/*(
-     static_cast<int32_t>(camera_height), 
-    // static_cast<int32_t>(camera_width), 
-    // CV_8UC1
+  cv::Mat image_mat;(
+    static_cast<int32_t>(camera_height), 
+    static_cast<int32_t>(camera_width), 
+    CV_8UC1
   );
-  */
 
   INFO_PRINT("Pulling Image Data");
 

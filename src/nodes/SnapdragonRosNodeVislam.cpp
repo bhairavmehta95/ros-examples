@@ -180,8 +180,6 @@ void Snapdragon::RosNode::Vislam::ThreadMain() {
   thread_stop_ = false;
   int32_t vislam_ret;
   while( !thread_stop_ ) {
-    // TODO: Pass in image dimensions and other size related things
-    
     vislam_ret = vislam_man.GetPose( vislamPose, vislamFrameId, timestamp_ns );
     if( vislam_ret == 0 ) {
       //check if the pose quality is good.  If not do not publish the data.

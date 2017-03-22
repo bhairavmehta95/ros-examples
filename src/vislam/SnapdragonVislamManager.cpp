@@ -32,6 +32,14 @@
 #include "SnapdragonVislamManager.hpp"
 #include "SnapdragonDebugPrint.h"
 
+// Custom Includes
+#include <image_transport/image_transport.h>
+#include <cv_bridge/cv_bridge.h>
+#include <sensor_msgs/image_encodings.h>
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
+
 Snapdragon::VislamManager::VislamManager() {
   cam_man_ptr_ = nullptr;
   imu_man_ptr_ = nullptr;
@@ -249,6 +257,7 @@ int32_t Snapdragon::VislamManager::GetPose( mvVISLAMPose& pose, int64_t& pose_fr
   uint32_t used = 0;
   uint64_t frame_ts_ns;
   static int64_t prev_frame_id = 0;
+
   // TODO:
   
   /*
@@ -260,6 +269,25 @@ int32_t Snapdragon::VislamManager::GetPose( mvVISLAMPose& pose, int64_t& pose_fr
 
   */
 
+
+
+  uint16_t camera_width = cam_params_.camera_config.pixel_width;
+  uint16_t camera_height = cam_params_.camera_config.pixel_height;
+  
+  // create matrix of size <height, width> with 8bit encoding
+  cv::Mat image_mat;/*(
+     static_cast<int32_t>(camera_height), 
+    // static_cast<int32_t>(camera_width), 
+    // CV_8UC1
+  );
+  */
+
+  INFO_PRINT("Pulling Image Data");
+
+
+
+  int32_t image_code = cam_man_ptr_->PullImageData( image_mat, &frame_id, &frame_ts_ns, image_buffer_, image_buffer_size_bytes_, camera_width, camera_height );
+ 
   rc = cam_man_ptr_->GetNextImageData( &frame_id, &frame_ts_ns, image_buffer_, image_buffer_size_bytes_ , &used );
 
   if( rc != 0 ) {

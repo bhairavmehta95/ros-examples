@@ -38,6 +38,9 @@
 #include <string>
 #include <chrono>
 
+// Custom Includes
+#include <opencv2/core/core.hpp>
+
 // TODO: Add implementation here, add declaration in header
 
 
@@ -326,6 +329,54 @@ int32_t Snapdragon::CameraManager::GetNextImageData
 
   return 0;
 }
+
+
+// Custom Implementation of Pulling out image
+int32_t Snapdragon::CameraManager::PullImageData(
+  cv::Mat& image_mat,
+  int64_t* frame_id, 
+  uint64_t* timestamp_ns,
+  uint8_t* image_data, 
+  uint32_t size,
+  uint16_t pixel_width,
+  uint16_t pixel_height
+  ) {
+  
+  std::unique_lock<std::mutex> lock( frame_mutex_ );
+  int32_t ret_code = 0;
+
+  // wait for new frame if queue is empty. 
+  frame_cv_.wait( lock, [&]{ return (frame_q_read_index_ != frame_q_write_index_); } );
+
+  if( !running_ ) {
+    // the camera has stopped.  so return an error code.
+    return  -1; 
+  }
+
+  if( frame_queue_[ frame_q_read_index_].first == -1 || frame_queue_[frame_q_read_index_].second == nullptr ) {
+    //this should not happen incorrect frame id;
+    ERROR_PRINT( "FrameId at read_index(%d) is incorrect: ", frame_q_read_index_ );
+    return -2;
+  }
+
+  if( size < image_size_bytes_ ) {
+    ERROR_PRINT( "Insuffient image buffer size: given: %d expected: %d",
+      size, image_size_bytes_ );
+    return -3;
+  }
+
+  *frame_id = frame_queue_[ frame_q_read_index_].first;
+  *timestamp_ns = frame_queue_[ frame_q_read_index_].second->timeStamp;
+  memcpy( image_data, reinterpret_cast<uint8_t*>( frame_queue_[frame_q_read_index_].second->data ), image_size_bytes_ );
+
+  // Loop starting from 0 to image_size_bytes with increments of the size of the data
+  for (uint8_t i = 0; i < image_size_bytes_; i += sizeof(*image_data)){
+    INFO_PRINT("%u", *(image_data + i));
+  }
+
+  return 0;
+}
+
 
 void Snapdragon::CameraManager::onPreviewFrame(camera::ICameraFrame* frame)
 {

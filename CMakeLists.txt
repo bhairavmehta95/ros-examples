@@ -5,6 +5,12 @@ project(snap_ros_examples)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  sensor_msgs
+  cv_bridge
+  std_msgs
+  image_transport
+
+  ## Original
   roscpp
   rospy
   std_msgs
@@ -13,6 +19,8 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
+
+find_package(OpenCV REQUIRED)
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -121,6 +129,8 @@ include_directories(
   $ENV{MV_SDK}/inc
 )
 
+include_directories(${OpenCV_INCLUDE_DIRS})
+
 add_definitions(-std=c++11) 
 
 ## Declare a C++ library
@@ -139,6 +149,8 @@ target_include_directories( snap_vislam PUBLIC
   src/common/
   $ENV{MV_SDK}/inc )
 
+target_link_libraries(snap_vislam ${OpenCV_LIBRARIES})
+
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
@@ -156,10 +168,12 @@ add_executable( test_imu_manager test/test_SnapdragonImuManager.cpp )
 target_link_libraries( test_imu_manager snap_vislam sensor_imu mv pthread camera  )
 
 add_executable( test_vislam test/test_SnapdragonVislamManager.cpp )
-target_link_libraries( test_vislam snap_vislam sensor_imu mv pthread camera  )
+target_link_libraries( test_vislam snap_vislam sensor_imu mv pthread camera )
 
 ## Declare a C++ executable
 add_executable(snap_vislam_node src/nodes/SnapdragonRosNodeVislam.cpp src/nodes/SnapdragonRosNodeVislam_main.cpp )
+
+target_link_libraries(snap_vislam_node ${OpenCV_LIBRARIES})
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
@@ -173,6 +187,7 @@ add_dependencies(snap_vislam_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_E
    sensor_imu
    pthread
    ${catkin_LIBRARIES}
+   ${OpenCV_LIBRARIES}
 )
 
 target_include_directories( snap_vislam_node PRIVATE src/nodes/ )

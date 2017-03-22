@@ -370,8 +370,13 @@ int32_t Snapdragon::CameraManager::PullImageData(
   memcpy( image_data, reinterpret_cast<uint8_t*>( frame_queue_[frame_q_read_index_].second->data ), image_size_bytes_ );
 
   // Loop starting from 0 to image_size_bytes with increments of the size of the data
+  int index = 0;
   for (uint8_t i = 0; i < image_size_bytes_; i += sizeof(*image_data)){
-    INFO_PRINT("%u", *(image_data + i));
+    // INFO_PRINT("%u", *(image_data + i));
+    row = (int)(index / pixel_width);
+    column = index % pixel_width;
+    image_mat.at<uint8_t>(row, column) = *(image_data + i);
+    ++index;
   }
 
   return 0;

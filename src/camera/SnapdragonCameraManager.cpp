@@ -373,13 +373,15 @@ int32_t Snapdragon::CameraManager::PullImageData(
   int index = 0;
   for (uint8_t i = 0; i < image_size_bytes_; i += sizeof(*image_data)){
     // INFO_PRINT("%u", *(image_data + i));
-    row = (int)(index / pixel_width);
-    column = index % pixel_width;
-    image_mat.at<uint8_t>(row, column) = *(image_data + i);
+    int row = (int)(index / pixel_width);
+    int column = index % pixel_width;
+    image_mat.at<uint8_t>(column, row) = *(image_data + i);
     ++index;
   }
 
+  INFO_PRINT("Image matrix was populated");
   return 0;
+
 }
 
 

@@ -1,3 +1,6 @@
+## Extra Features
+* Image Publisher
+
 # Snapdragon Flight VISLAM-ROS Sample Code
 
 This repo provides the sample code and instructions to run Visual-Inertial Simultaneous Localization And Mapping (VISLAM) as a ROS node on the [Qualcomm Snapdragon Platform](https://developer.qualcomm.com/hardware/snapdragon-flight)<sup>TM</sup>. 

@@ -168,7 +168,7 @@ add_executable( test_imu_manager test/test_SnapdragonImuManager.cpp )
 target_link_libraries( test_imu_manager snap_vislam sensor_imu mv pthread camera  )
 
 add_executable( test_vislam test/test_SnapdragonVislamManager.cpp )
-target_link_libraries( test_vislam snap_vislam sensor_imu mv pthread camera )
+target_link_libraries( test_vislam snap_vislam sensor_imu mv pthread camera ${OpenCV_LIBRARIES})
 
 ## Declare a C++ executable
 add_executable(snap_vislam_node src/nodes/SnapdragonRosNodeVislam.cpp src/nodes/SnapdragonRosNodeVislam_main.cpp )

@@ -271,12 +271,9 @@ int32_t Snapdragon::VislamManager::GetPose( cv::Mat& image_mat, mvVISLAMPose& po
   uint16_t camera_width = cam_params_.camera_config.pixel_width;
   uint16_t camera_height = cam_params_.camera_config.pixel_height;
 
-  INFO_PRINT("Pulling Image Data");
   int32_t image_code = cam_man_ptr_->PullImageData( image_mat, &frame_id, &frame_ts_ns, image_buffer_, image_buffer_size_bytes_, camera_width, camera_height );
-  INFO_PRINT("Successfully pulled Image Data"); 
 
   rc = cam_man_ptr_->GetNextImageData( &frame_id, &frame_ts_ns, image_buffer_, image_buffer_size_bytes_ , &used );
-  INFO_PRINT("Successfully got next Image data");
   
   if( rc != 0 ) {
     WARN_PRINT( "Error Getting the image from camera" );

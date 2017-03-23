@@ -216,6 +216,8 @@ void Snapdragon::RosNode::Vislam::ThreadMain() {
           // Publish Image Data
           PublishImageData( image_mat );
       }
+      else
+          ROS_INFO_STREAM("Poor pose quality, not publishing");
     }
     else {
       ROS_WARN_STREAM( "Snapdragon::RosNodeVislam::VislamThreadMain: Warning Getting Pose Information" );

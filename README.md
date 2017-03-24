@@ -3,6 +3,8 @@
 ## Image Publisher:
 To subscribe to the image publisher, subscribe to the ```vislam/image``` topic. Currently, the image is outputted at approximately ~17Hz, but I will be working on trying to speed that up with some optimizations.
 
+This is the stable branch of the code that includes both the ```vislam/pose``` and ```vislam/odometry``` topics alongside the image publisher.
+  
 # Snapdragon Flight VISLAM-ROS Sample Code
 
 This repo provides the sample code and instructions to run Visual-Inertial Simultaneous Localization And Mapping (VISLAM) as a ROS node on the [Qualcomm Snapdragon Platform](https://developer.qualcomm.com/hardware/snapdragon-flight)<sup>TM</sup>. 

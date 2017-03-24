@@ -243,6 +243,37 @@ int32_t Snapdragon::VislamManager::Imu_IEventListener_ProcessSamples( sensor_imu
   return rc;
 }
 
+int32_t Snapdragon::VislamManager::GetImage( cv::Mat& image_mat ){
+  int32_t rc = 0;
+  if( !initialized_ ) {
+    WARN_PRINT( "VislamManager not initialize" );
+    return -1;
+  }
+
+  // get image from camera
+  int64_t frame_id;
+  uint32_t used = 0;
+  uint64_t frame_ts_ns;
+  static int64_t prev_frame_id = 0;
+
+
+  // Pulls the image out so we can publish it as a ROS Message
+  uint16_t camera_width = cam_params_.camera_config.pixel_width;
+  uint16_t camera_height = cam_params_.camera_config.pixel_height;
+
+  int32_t image_code = cam_man_ptr_->PullImageData( 
+    image_mat, &frame_id, &frame_ts_ns, image_buffer_, image_buffer_size_bytes_,
+    &used, camera_width, camera_height );
+
+  // adjust the frame-timestamp for VISLAM at it needs the time at the center of the exposure and not the sof.
+  // Correction from exposure time
+  float correction = 1e3 * (cam_man_ptr_->GetExposureTimeUs()/2.f);
+  float modified_timestamp = frame_ts_ns - static_cast<int64_t>(correction);
+
+  INFO_PRINT("Successfully returning rc as, %i", rc);
+  return rc;
+}
+
 int32_t Snapdragon::VislamManager::GetPose( cv::Mat& image_mat, mvVISLAMPose& pose, int64_t& pose_frame_id, uint64_t timestamp_ns ) {
   int32_t rc = 0;
   if( !initialized_ ) {
@@ -258,22 +289,15 @@ int32_t Snapdragon::VislamManager::GetPose( cv::Mat& image_mat, mvVISLAMPose& po
   uint64_t frame_ts_ns;
   static int64_t prev_frame_id = 0;
 
-  // TODO:
-  /*
-  function to return data object that is used
-    
-  Requires: frame_id, frame_ts_ns, image_buffer_, image_buffer_size_bytes_, CV::Mat Reference
-  Extracts image data, loads it into cv::Mat using cv_bridge (use the size in bytes and pass dimensions if needed)
-    Dimensions can be found in the config pointer
 
-  */
-
+  // Pulls the image out so we can publish it as a ROS Message
   uint16_t camera_width = cam_params_.camera_config.pixel_width;
   uint16_t camera_height = cam_params_.camera_config.pixel_height;
 
-  int32_t image_code = cam_man_ptr_->PullImageData( image_mat, &frame_id, &frame_ts_ns, image_buffer_, image_buffer_size_bytes_, camera_width, camera_height );
+  int32_t image_code = cam_man_ptr_->PullImageData( image_mat, &frame_id, &frame_ts_ns, image_buffer_, image_buffer_size_bytes_, &used, camera_width, camera_height );
 
-  rc = cam_man_ptr_->GetNextImageData( &frame_id, &frame_ts_ns, image_buffer_, image_buffer_size_bytes_ , &used );
+  // Barbones Only: Removing getting the next image data
+  // rc = cam_man_ptr_->GetNextImageData( &frame_id, &frame_ts_ns, image_buffer_, image_buffer_size_bytes_ , &used );
   
   if( rc != 0 ) {
     WARN_PRINT( "Error Getting the image from camera" );
@@ -289,8 +313,11 @@ int32_t Snapdragon::VislamManager::GetPose( cv::Mat& image_mat, mvVISLAMPose& po
     float modified_timestamp = frame_ts_ns - static_cast<int64_t>(correction);
     {
       std::lock_guard<std::mutex> lock( sync_mutex_ );
+
+      // TODO: Do we need this now that we don't need the pose?
       mvVISLAM_AddImage(vislam_ptr_, modified_timestamp, image_buffer_, false);
-      pose = mvVISLAM_GetPose(vislam_ptr_);
+      // Barebones Only: No longer needing to get pose
+      //pose = mvVISLAM_GetPose(vislam_ptr_);
       pose_frame_id = frame_id;
       timestamp_ns = static_cast<uint64_t>(modified_timestamp);
     }

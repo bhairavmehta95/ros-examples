@@ -205,11 +205,17 @@ void Snapdragon::RosNode::Vislam::ThreadMain() {
   );
 
   while( !thread_stop_ ) {
-    vislam_ret = vislam_man.GetPose( image_mat, vislamPose, vislamFrameId, timestamp_ns );
+    vislam_ret = vislam_man.GetImage( image_mat );
     if( vislam_ret == 0 ) {
+      PublishImageData( image_mat );
+      
+      // Barebones only: No longer need to do this and publish pose
+      /*
       //check if the pose quality is good.  If not do not publish the data.
       if( vislamPose.poseQuality != MV_TRACKING_STATE_FAILED  && 
           vislamPose.poseQuality != MV_TRACKING_STATE_INITIALIZING ) {
+
+
           // Publish Pose Data
           PublishVislamData( vislamPose, vislamFrameId, timestamp_ns );
 
@@ -218,6 +224,8 @@ void Snapdragon::RosNode::Vislam::ThreadMain() {
       }
       else
           ROS_INFO_STREAM("Poor pose quality, not publishing");
+
+      */
     }
     else {
       ROS_WARN_STREAM( "Snapdragon::RosNodeVislam::VislamThreadMain: Warning Getting Pose Information" );

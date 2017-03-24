@@ -166,7 +166,7 @@ public:
       uint8_t* image_data, uint32_t size, uint32_t* used);
 
   int32_t PullImageData(cv::Mat& image_mat, int64_t* frame_id, uint64_t* timestamp_ns,
-    uint8_t* image_data, uint32_t size, uint16_t pixel_width, uint16_t pixel_height);
+    uint8_t* image_data, uint32_t size, uint32_t* used, uint16_t pixel_width, uint16_t pixel_height);
 
   inline size_t GetImageSize() const
   {

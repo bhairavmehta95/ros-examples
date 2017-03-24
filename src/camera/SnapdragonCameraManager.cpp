@@ -41,9 +41,6 @@
 // Custom Includes
 #include <opencv2/core/core.hpp>
 
-// TODO: Add implementation here, add declaration in header
-
-
 Snapdragon::CameraManager::CameraManager( Snapdragon::CameraParameters* params_ptr) {
   initialized_ = false;
   running_     = false;
@@ -338,6 +335,7 @@ int32_t Snapdragon::CameraManager::PullImageData(
   uint64_t* timestamp_ns,
   uint8_t* image_data, 
   uint32_t size,
+  uint32_t* used,
   uint16_t pixel_width,
   uint16_t pixel_height
   ) {
@@ -368,7 +366,8 @@ int32_t Snapdragon::CameraManager::PullImageData(
   *frame_id = frame_queue_[ frame_q_read_index_].first;
   *timestamp_ns = frame_queue_[ frame_q_read_index_].second->timeStamp;
   memcpy( image_data, reinterpret_cast<uint8_t*>( frame_queue_[frame_q_read_index_].second->data ), image_size_bytes_ );
-
+  *used = image_size_bytes_;
+  
   // Loop starting from 0 to image_size_bytes with increments of the size of the data
   for (int index = 0; index < 480*640; ++index){
     int row = index / pixel_width;
@@ -377,6 +376,17 @@ int32_t Snapdragon::CameraManager::PullImageData(
   }
   
   INFO_PRINT("Image matrix was populated");
+
+  // Barebones only: Removes frame from queue
+
+  //invalidate the entry in the queue;
+  frame_queue_[frame_q_read_index_].second->releaseRef();
+  frame_queue_[frame_q_read_index_] = std::make_pair( -1, nullptr );
+
+  // increment the read counter.
+  frame_q_read_index_++;
+  frame_q_read_index_ = ( frame_q_read_index_ >= camera_config_ptr_->num_image_buffers)?0:frame_q_read_index_;
+
   return 0;
 }
 

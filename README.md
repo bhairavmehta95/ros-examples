@@ -1,7 +1,7 @@
 # Extra Features
 
 ## Image Publisher:
-To subscribe to the image publisher, subscribe to the ```vislam/image``` topic. Currently, the image is outputted at approximately ~17Hz, but I will be working on trying to speed that up with some optimizations.
+To subscribe to the image publisher, subscribe to the ```vislam/image``` topic. Currently, the image is outputted at approximately ~17Hz~ 30Hz, but I will be working on trying to speed that up with some optimizations.
 
 The ```barebones``` branch of this repository is a stripped down camera driver. The open source [camera driver](https://github.com/PX4/snap_cam) does not include the autoexposure adjustments, found only in the closed source machine vision library.
 

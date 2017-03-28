@@ -375,8 +375,6 @@ int32_t Snapdragon::CameraManager::PullImageData(
     image_mat.at<uint8_t>(row, column) = *(image_data + index);
   }
   
-  INFO_PRINT("Image matrix was populated");
-
   // Barebones only: Removes frame from queue
 
   //invalidate the entry in the queue;

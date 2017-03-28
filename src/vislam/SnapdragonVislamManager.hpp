@@ -131,6 +131,8 @@ public:
    *  otherwise = failure.
    **/
   int32_t GetPose( cv::Mat& image_mat, mvVISLAMPose& pose, int64_t& frame_id, uint64_t timestamp_ns );
+  
+  int32_t GetImage( cv::Mat& image_mat );
 
   /** 
    * MV SDK's wrapper to get the PointCloud data.

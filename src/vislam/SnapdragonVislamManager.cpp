@@ -270,7 +270,6 @@ int32_t Snapdragon::VislamManager::GetImage( cv::Mat& image_mat ){
   float correction = 1e3 * (cam_man_ptr_->GetExposureTimeUs()/2.f);
   float modified_timestamp = frame_ts_ns - static_cast<int64_t>(correction);
 
-  INFO_PRINT("Successfully returning rc as, %i", rc);
   return rc;
 }
 

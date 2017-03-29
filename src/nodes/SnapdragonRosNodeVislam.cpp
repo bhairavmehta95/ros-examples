@@ -60,6 +60,9 @@ Snapdragon::RosNode::Vislam::Vislam( ros::NodeHandle nh ) : nh_(nh)
   // Adding custom image publisher
   pub_vislam_image_ = nh_.advertise<sensor_msgs::Image>("vislam/image", 1);
 
+  fpsCb = boost::bind(&fpsCbFunction, _1, _2);
+  server.setCallback(fpsCb);
+
   vislam_initialized_ = false;
   thread_started_ = false;
   thread_stop_ = false;
@@ -320,3 +323,6 @@ void Snapdragon::RosNode::Vislam::PublishImageData(cv::Mat& image_mat){
   pub_vislam_image_.publish(img_msg); 
 }
 
+void Snapdragon::RosNode::Vislam::fpsCbFunction( snap_ros_examples::Snapdragon &config, int32_t desired_fps ){
+  ROS_INFO_STREAM("Callback function was activated!");
+}

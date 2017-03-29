@@ -121,7 +121,7 @@ private:
   ros::Publisher   pub_vislam_image_;
 
   dynamic_reconfigure::Server<snap_ros_examples::Snapdragon> server;
-  dynamic_reconfigure::Server<snap_ros_examples::Snapdragon>::CallbackType fpsCbFunction;
+  dynamic_reconfigure::Server<snap_ros_examples::Snapdragon>::CallbackType fpsCb;
 
   Snapdragon::VislamManager vislam_manager_;
 };

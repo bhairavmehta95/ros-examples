@@ -29,6 +29,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  ****************************************************************************/
+#include <opencv2/core/core.hpp>
+
 #include "SnapdragonVislamManager.hpp"
 
 int main( int argc, char** argv ) {
@@ -128,8 +130,9 @@ int main( int argc, char** argv ) {
   mvVISLAMPose vislamPose;
   int64_t vislamFrameId;
   uint64_t timestamp_ns;
+  cv::Mat img;
   while( count < max_poses ) {
-    vislam_ret = vislam_man.GetPose( vislamPose, vislamFrameId, timestamp_ns );
+    vislam_ret = vislam_man.GetPose( img, vislamPose, vislamFrameId, timestamp_ns );
     if( vislam_ret == 0 ) {
             printf( "%lld, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f\n",
                     vislamFrameId,

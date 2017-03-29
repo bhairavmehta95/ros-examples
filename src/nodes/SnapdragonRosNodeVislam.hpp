@@ -41,6 +41,10 @@
 // Custom Includes
 #include <opencv2/core/core.hpp>
 
+#include <dynamic_reconfigure/server.h>
+#include <snap_ros_examples/Snapdragon.h>
+
+
 /**
  * Wrapper Ros Node to support VISLAM from Snapdragon flight platform.
  */
@@ -89,6 +93,11 @@ public:
   int32_t Stop();
 
   /**
+   * Callback to change FPS
+   */
+
+  void fpsCbFunction( snap_ros_examples::Snapdragon &config, int32_t desired_fps );  
+  /**
    * Destructor for the node.
    */
   ~Vislam();
@@ -110,5 +119,9 @@ private:
   ros::Publisher   pub_vislam_pose_;
   ros::Publisher   pub_vislam_odometry_;
   ros::Publisher   pub_vislam_image_;
+
+  dynamic_reconfigure::Server<snap_ros_examples::Snapdragon> server;
+  dynamic_reconfigure::Server<snap_ros_examples::Snapdragon>::CallbackType fpsCbFunction;
+
   Snapdragon::VislamManager vislam_manager_;
 };

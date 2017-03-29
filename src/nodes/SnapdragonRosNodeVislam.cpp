@@ -48,6 +48,9 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
+#include <dynamic_reconfigure/server.h>
+#include <dynamic_tutorials/TutorialsConfig.h>
+
 
 Snapdragon::RosNode::Vislam::Vislam( ros::NodeHandle nh ) : nh_(nh)
 {
@@ -204,16 +207,11 @@ void Snapdragon::RosNode::Vislam::ThreadMain() {
      CV_8UC1
   );
 
-  int index = 0;
   while( !thread_stop_ ) {
     vislam_ret = vislam_man.GetImage( image_mat );
     if( vislam_ret == 0 ) {
       PublishImageData( image_mat );
-      ++index;
 
-      if (index > 500){
-        
-      }
       // Barebones only: No longer need to do this and publish pose
       /*
       //check if the pose quality is good.  If not do not publish the data.

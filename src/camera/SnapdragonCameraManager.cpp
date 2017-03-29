@@ -105,8 +105,9 @@ int32_t Snapdragon::CameraManager::Initialize(){
     std::vector<camera::Range> preview_fps_ranges = params_.getSupportedPreviewFpsRanges();
     int fps_index = -1;
     for (unsigned int ii = 0; ii < preview_fps_ranges.size(); ++ii) {
-      //std::cout << ii << ": [ " << preview_fps_ranges[ii].min << ", "
-      //  << preview_fps_ranges[ii].max << " ] " << std::endl;
+      // std::cout << ii << ": [ " << preview_fps_ranges[ii].min << ", "\
+      // << preview_fps_ranges[ii].max << " ] " << std::endl;
+      
       if (preview_fps_ranges[ii].max / 1000 == camera_config_ptr_->fps) {
         fps_index = static_cast<int>(ii);
       }
@@ -327,7 +328,6 @@ int32_t Snapdragon::CameraManager::GetNextImageData
   return 0;
 }
 
-
 // Custom Implementation of Pulling out image
 int32_t Snapdragon::CameraManager::PullImageData(
   cv::Mat& image_mat,
@@ -453,3 +453,41 @@ void Snapdragon::CameraManager::onVideoFrame(camera::ICameraFrame* frame)
   INFO_PRINT("Got video frame!");
 }
 
+void Snapdragon::CameraManager::updateFPS( int64_t desired_fps ){
+  // For Reference:
+  std::vector<int> available_values {15, 24, 30, 60, 90, 120}; 
+
+  // Check desired FPS against supported FPS values
+  std::vector<camera::Range> preview_fps_ranges = params_.getSupportedPreviewFpsRanges();
+  int fps_index = -1;
+  for (unsigned int ii = 0; ii < preview_fps_ranges.size(); ++ii) {
+    // std::cout << ii << ": [ " << preview_fps_ranges[ii].min << ", "\
+    // << preview_fps_ranges[ii].max << " ] " << std::endl;
+    
+    if (preview_fps_ranges[ii].max / 1000 == desired_fps) {
+      fps_index = static_cast<int>(ii);
+    }
+  }
+
+  {
+    std::lock_guard<std::mutex> lock( frame_mutex_ );
+    if (fps_index != -1){
+      INFO_PRINT("Setting FPS to %d", desired_fps);
+      params_.setPreviewFpsRange(preview_fps_ranges[fps_index]);
+    }
+
+    else{
+      int closest_index = 0;
+      abs_difference = abs(desired_fps - available_values[0]); 
+      for (int i = 1; i < available_values.size(); ++i){
+        if (abs(desired_fps - available_values[i]) < abs_difference){
+          closest_index = i;
+          abs_difference = abs(desired_fps - available_values[i]);
+        }
+      }
+      
+      ERROR_PRINT("Invalid FPS value of %d. Using closest value of %d", desired_fps, preview_fps_ranges[closest_index]);
+      params_.setPreviewFpsRange(preview_fps_ranges[closest_index]);
+    }
+  }
+}

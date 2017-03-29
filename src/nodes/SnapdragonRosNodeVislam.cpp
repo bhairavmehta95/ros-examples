@@ -98,7 +98,7 @@ int32_t Snapdragon::RosNode::Vislam::Stop() {
 }
 
 void Snapdragon::RosNode::Vislam::ThreadMain() {
- mvCameraConfiguration config;
+  mvCameraConfiguration config;
   // Set up camera configuraiton (snapdragon down facing camera)
   memset(&config, 0, sizeof(config));
   config.pixelWidth = 640;
@@ -204,11 +204,16 @@ void Snapdragon::RosNode::Vislam::ThreadMain() {
      CV_8UC1
   );
 
+  int index = 0;
   while( !thread_stop_ ) {
     vislam_ret = vislam_man.GetImage( image_mat );
     if( vislam_ret == 0 ) {
       PublishImageData( image_mat );
-      
+      ++index;
+
+      if (index > 500){
+        
+      }
       // Barebones only: No longer need to do this and publish pose
       /*
       //check if the pose quality is good.  If not do not publish the data.

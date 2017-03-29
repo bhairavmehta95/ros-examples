@@ -188,6 +188,9 @@ public:
   virtual void onPreviewFrame(camera::ICameraFrame* frame);
   virtual void onVideoFrame(camera::ICameraFrame* frame);
 
+  // function to update fps from Dynamic Reconfigure
+  void Snapdragon::CameraManager::updateFPS(int64_t desired_fps);
+
 private: // private class methods.
 
   void UpdateGainAndExposure();

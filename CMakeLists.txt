@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   std_msgs
   image_transport
+  dynamic_reconfigure
 
   ## Original
   roscpp
@@ -94,10 +95,9 @@ find_package(OpenCV REQUIRED)
 ##     and list every .cfg file to be processed
 
 ## Generate dynamic reconfigure parameters in the 'cfg' folder
-# generate_dynamic_reconfigure_options(
-#   cfg/DynReconf1.cfg
-#   cfg/DynReconf2.cfg
-# )
+generate_dynamic_reconfigure_options(
+   cfg/Snapdragon.cfg
+)
 
 ###################################
 ## catkin specific configuration ##
@@ -177,7 +177,7 @@ target_link_libraries(snap_vislam_node ${OpenCV_LIBRARIES})
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-add_dependencies(snap_vislam_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(snap_vislam_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} ${PROJECT_NAME}_gencfg)
 
 ## Specify libraries to link a library or executable target against
  target_link_libraries(snap_vislam_node

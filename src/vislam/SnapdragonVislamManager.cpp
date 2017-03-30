@@ -325,3 +325,7 @@ int32_t Snapdragon::VislamManager::GetPose( cv::Mat& image_mat, mvVISLAMPose& po
   INFO_PRINT("Successfully returning rc as, %i", rc);
   return rc;
 }
+
+Snapdragon::CameraManager* Snapdragon::VislamManager::getCamManPtr(){
+  return cam_man_ptr_;
+}

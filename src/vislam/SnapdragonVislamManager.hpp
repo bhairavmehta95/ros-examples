@@ -165,6 +165,9 @@ public:
    **/
   int32_t Imu_IEventListener_ProcessSamples( sensor_imu* samples, uint32_t count );
 
+  // Function to access private cam_man_ptr_
+  Snapdragon::CameraManager* getCamManPtr();
+
   /**
    * Destructor
    */

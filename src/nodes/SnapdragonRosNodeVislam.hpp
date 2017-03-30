@@ -47,10 +47,14 @@
 
 /**
  * Wrapper Ros Node to support VISLAM from Snapdragon flight platform.
+ * VislamDynRec = Class to hold dynamic reconfigure parameters
  */
+
 namespace Snapdragon {
   namespace RosNode {
     class Vislam;
+
+    class VislamDynRec;
   }
 }
 
@@ -124,4 +128,20 @@ private:
   dynamic_reconfigure::Server<snap_ros_examples::SnapdragonConfig>::CallbackType fpsCb;
 
   Snapdragon::VislamManager vislam_manager_;
+  Snapdragon::Vislam::VislamDynRec vislam_dyn_rec_;
+};
+
+/**
+ * Class to hold dynamic reconfig's current values
+ */
+class Snapdragon::Vislam::VislamDynRec
+{
+
+public:
+  VislamDynRec();
+
+  // public data members to make it accessible for all
+  uint32_t current_fps_;
+
+  bool manual_fps_;
 };

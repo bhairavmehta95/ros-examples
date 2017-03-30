@@ -323,6 +323,31 @@ void Snapdragon::RosNode::Vislam::PublishImageData(cv::Mat& image_mat){
   pub_vislam_image_.publish(img_msg); 
 }
 
-void Snapdragon::RosNode::Vislam::fpsCbFunction( snap_ros_examples::SnapdragonConfig &config, int32_t desired_fps ){
-  ROS_INFO_STREAM("Callback function was activated!");
+void Snapdragon::RosNode::Vislam::fpsCbFunction( snap_ros_examples::SnapdragonConfig &config, uint32_t level ){
+  if (config.dr_manual_fps){
+    // set to true if not already
+    if(!vislam_dyn_rec_.manual_fps_)
+      vislam_dyn_rec_.manual_fps_ = true;
+
+    if (config.dr_fps_value != vislam_dyn_rec_.current_fps_){
+      // TODO: Actually set the FPS value
+
+      vislam_dyn_rec_.current_fps_ = config.dr_fps_value;
+      ROS_INFO_STREAM("Just set a new FPS value!");
+    }
+  }
+
+  // turning off manual fps
+  else{
+    vislam_dyn_rec_.manual_fps_ = false;
+    vislam_dyn_rec_.current_fps_ = 30;
+
+    ROS_INFO_STREAM("Turning off manual fps!");
+    // TODO: Reset back to 30
+  }
+}
+
+// default ctor for VislamDynRec class
+Snapdragon::Vislam::VislamDynRec() : current_fps_(30), manual_fps_(false) {
+
 }

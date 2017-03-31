@@ -124,21 +124,26 @@ int32_t Snapdragon::CameraManager::Initialize(int64_t desired_fps = camera_confi
       std::lock_guard<std::mutex> lock( frame_mutex_ );
       if (fps_index != -1)
       {
-        INFO_PRINT("Setting FPS to %d", camera_config_ptr_->fps);
+        INFO_PRINT("Setting FPS to %d", preview_fps_ranges[fps_index].max / 1000);
         params_.setPreviewFpsRange(preview_fps_ranges[fps_index]);
       }
 
+      // didn't find a match
       else
       {
-        if (default_ctor){
+        // look for the FPS value that was tried
+        if (!default_ctor){
           int abs_difference = abs(desired_fps - preview_fps_ranges[0].max); 
           for (unsigned int ii = 1; ii < preview_fps_ranges.size(); ++ii){
             if (abs(preview_fps_ranges[ii].max - desired_fps) < abs_difference) {
               fps_index = static_cast<int>(ii);
             }
           }
+
+          INFO_PRINT("Setting FPS to %d", preview_fps_ranges[fps_index].max / 1000);
         }
 
+        // default ctor
         else{
           ERROR_PRINT("Invalid FPS value of %d. Using camera default.", camera_config_ptr_->fps);
         }

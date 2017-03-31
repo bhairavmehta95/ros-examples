@@ -79,7 +79,16 @@ public:
    *  0=success
    *  otherwise=failure.
    */
-  int32_t Initialize();
+  int32_t Initialize(int64_t desired_fps = camera_config_ptr_->fps, bool default_ctor = true);
+
+  /**
+   * Function to update FPS 
+   * Note: Initialize Shall be called first. 
+   * @return int32_t
+   *  0 = success;
+   *  otherwise = failure.
+   *  If Initialize is not called first, this function will fail.
+   */
 
   /**
    * Function to start the camera interface. 

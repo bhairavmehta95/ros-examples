@@ -79,7 +79,7 @@ public:
    *  0=success
    *  otherwise=failure.
    */
-  int32_t Initialize(int64_t desired_fps = camera_config_ptr_->fps, bool default_ctor = true);
+  int32_t Initialize(int64_t desired_fps = -1, bool default_ctor = true);
 
   /**
    * Function to update FPS 

@@ -98,6 +98,8 @@ int32_t Snapdragon::CameraManager::Initialize(int64_t desired_fps, bool default_
 
     camera_ptr_->addListener(this);
 
+    std::cout << &camera_ptr_ << " is the memaddr of camera_ptr" << std::endl;
+
     ret = params_.init(camera_ptr_);
     if (ret != 0) {
       ERROR_PRINT("Failed to initialize camera parameters.");

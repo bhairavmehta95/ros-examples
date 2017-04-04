@@ -76,8 +76,12 @@ Snapdragon::CameraManager::CameraManager( Snapdragon::CameraParameters* params_p
   mvCPA_ptr_ = NULL;
 }
 
-int32_t Snapdragon::CameraManager::Initialize(int64_t desired_fps = camera_config_ptr_->fps, bool default_ctor = true){
+int32_t Snapdragon::CameraManager::Initialize(int64_t desired_fps = -1, bool default_ctor = true){
   if (!initialized_) {
+    if (desired_fps == -1){
+      desired_fps = camera_config_ptr_->fps;
+    }
+    
     int32_t cam_id;
     if( Snapdragon::FindCamera( camera_config_ptr_->cam_type, &cam_id ) != 0 ) {
       ERROR_PRINT( "Cannot Find Camera Id for Type: %d", camera_config_ptr_->cam_type );

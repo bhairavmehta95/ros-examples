@@ -81,7 +81,7 @@ int32_t Snapdragon::CameraManager::Initialize(int64_t desired_fps = -1, bool def
     if (desired_fps == -1){
       desired_fps = camera_config_ptr_->fps;
     }
-    
+
     int32_t cam_id;
     if( Snapdragon::FindCamera( camera_config_ptr_->cam_type, &cam_id ) != 0 ) {
       ERROR_PRINT( "Cannot Find Camera Id for Type: %d", camera_config_ptr_->cam_type );
@@ -190,6 +190,7 @@ int32_t Snapdragon::CameraManager::Initialize(int64_t desired_fps = -1, bool def
 
 int32_t Snapdragon::CameraManager::Terminate() {
   if( camera_ptr_ != nullptr ) {
+    INFO_PRINT("Starting to terminate.");
     // remove this as a listener.
     camera_ptr_->removeListener( this );
     //stop the camera.
@@ -202,6 +203,8 @@ int32_t Snapdragon::CameraManager::Terminate() {
     mvCPA_Deinitialize(mvCPA_ptr_);
     mvCPA_ptr_ = nullptr;
   }
+
+  initialized_ = false;
   return 0;
 }
 
@@ -485,6 +488,8 @@ void Snapdragon::CameraManager::onVideoFrame(camera::ICameraFrame* frame)
 
 void Snapdragon::CameraManager::updateFPS( int64_t desired_fps ){
   Terminate();
+  INFO_PRINT("Finished termination");
   Initialize(desired_fps, true);
+  INFO_PRINT("Finished initialization");
   Start();
 }

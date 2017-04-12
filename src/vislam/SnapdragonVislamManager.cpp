@@ -103,16 +103,16 @@ int32_t Snapdragon::VislamManager::Initialize
     }
   }
 
-  if( rc == 0 ) { //initialize the Imu Manager.
-    imu_man_ptr_ = new Snapdragon::ImuManager();
-    if( imu_man_ptr_ != nullptr ) {
-      rc = imu_man_ptr_->Initialize();
-      imu_man_ptr_->AddHandler( this );
-    }
-    else {
-      rc = -1;
-    }
-  }
+  // if( rc == 0 ) { //initialize the Imu Manager.
+  //   imu_man_ptr_ = new Snapdragon::ImuManager();
+  //   if( imu_man_ptr_ != nullptr ) {
+  //     rc = imu_man_ptr_->Initialize();
+  //     imu_man_ptr_->AddHandler( this );
+  //   }
+  //   else {
+  //     rc = -1;
+  //   }
+  // }
 
   //now intialize the VISLAM module.
   if( rc == 0 ) {
@@ -146,7 +146,7 @@ int32_t Snapdragon::VislamManager::Start() {
   int32_t rc = 0;
   if( initialized_ ) {
     //start the camera
-    rc =  imu_man_ptr_->Start();
+    //rc =  imu_man_ptr_->Start();
     rc |= cam_man_ptr_->Start();
 
     //wait till we get the first frame.

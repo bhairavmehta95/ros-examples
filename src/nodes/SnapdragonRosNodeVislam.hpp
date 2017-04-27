@@ -144,4 +144,14 @@ public:
   uint32_t current_fps_;
 
   bool manual_fps_;
+
+  // public data members to make it accessible for all
+  uint32_t current_exposurefps_;
+
+  bool manual_exposure_;
+
+  // public data members to make it accessible for all
+  uint32_t current_gain_;
+
+  bool manual_gain_;
 };

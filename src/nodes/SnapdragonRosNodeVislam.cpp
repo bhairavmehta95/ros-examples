@@ -328,25 +328,47 @@ void Snapdragon::RosNode::Vislam::PublishImageData(cv::Mat& image_mat){
 }
 
 void Snapdragon::RosNode::Vislam::fpsCbFunction( snap_ros_examples::SnapdragonConfig &config, uint32_t level ){
-  if (config.dr_manual_fps){
+  if (config.dr_manual_exposure || config.dr_manual_gain){
     // set to true if not already
-    if(!vislam_dyn_rec_->manual_fps_)
-      vislam_dyn_rec_->manual_fps_ = true;
+    
+    vislam_dyn_rec_->manual_exposure_ = config.dr_manual_exposure;
+    vislam_dyn_rec_->manual_gain_ = config.dr_manual_gain;    
 
-    if (config.dr_fps_value != vislam_dyn_rec_->current_fps_){
-      ROS_INFO_STREAM("Attempting to set a new FPS value");
-      // Actually set the FPS value
-      vislam_manager_.getCamManPtr()->updateFPS(static_cast<int64_t>(config.dr_fps_value));
+    if (config.dr_exposure_value != vislam_dyn_rec_->current_exposure_ && vislam_dyn_rec_->manual_exposure_){
+      ROS_INFO_STREAM("Attempting to set a new exposure value");
+      // Actually set the exposure value
 
-      vislam_dyn_rec_->current_fps_ = config.dr_fps_value;
-      ROS_INFO_STREAM("Just set a new FPS value!");
+      vislam_manager_.getCamManPtr()->updateExposure(config.dr_exposure_value, true);
+      
+
+      vislam_dyn_rec_->current_expsure_ = config.dr_exposure_value;
+      ROS_INFO_STREAM("Just set a new exposure value!");
     }
+
+    else{
+      vislam_manager_.getCamManPtr()->updateExposure(0, false);
+    }
+
+    if (config.dr_gain_value != vislam_dyn_rec_->current_gain_ && vislam_dyn_rec_->manual_gain_){
+      ROS_INFO_STREAM("Attempting to set a new gain value");
+      // Actually set the Gain value
+
+      vislam_manager_.getCamManPtr()->updateGain(config.dr_gain_value, true);
+      
+
+      vislam_dyn_rec_->current_expsure_ = config.dr_gain_value;
+      ROS_INFO_STREAM("Just set a new gain value!");
+    }
+
+    else{
+      vislam_manager_.getCamManPtr()->updateGain(0, false);
+    }
+
+
   }
 
   // turning off manual fps
   else{
-    vislam_dyn_rec_->manual_fps_ = false;
-    vislam_dyn_rec_->current_fps_ = 30;
 
     ROS_INFO_STREAM("Turning off manual fps!");
     // TODO: Reset back to 30
@@ -354,6 +376,8 @@ void Snapdragon::RosNode::Vislam::fpsCbFunction( snap_ros_examples::SnapdragonCo
 }
 
 // default ctor for VislamDynRec class
-Snapdragon::RosNode::VislamDynRec::VislamDynRec() : current_fps_(30), manual_fps_(false) {
+Snapdragon::RosNode::VislamDynRec::VislamDynRec() : current_fps_(30), manual_fps_(false),
+                                                    current_exposure_(0), manual_exposure_(false),
+                                                    current_gain_(0), manual_gain_(false) {
 
 }

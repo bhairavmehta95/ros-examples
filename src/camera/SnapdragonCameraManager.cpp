@@ -44,6 +44,8 @@
 Snapdragon::CameraManager::CameraManager( Snapdragon::CameraParameters* params_ptr) {
   initialized_ = false;
   running_     = false;
+  manual_exposure_ = false;
+  manual_gain_ false;
 
   snap_camera_param_ptr_ = params_ptr;
   camera_config_ptr_     = &params_ptr->camera_config;
@@ -268,6 +270,19 @@ void Snapdragon::CameraManager::UpdateGainAndExposure()
 
   float cpa_exposure, cpa_gain;
   mvCPA_GetValues(mvCPA_ptr_, &cpa_exposure, &cpa_gain);
+
+  std::cout << "CPA_EXPOSURE: " cpa_exposure << "\nCPA GAIN: " << cpa_gain << std::endl;
+  
+  // TODO: 
+  if (manual_exposure_){
+    
+  }
+
+  if (manual_gain_){
+
+  }
+
+
 
   exposure_target_ = static_cast<int>(camera_config_ptr_->min_exposure + cpa_exposure
       * (camera_config_ptr_->max_exposure - camera_config_ptr_->min_exposure));
@@ -498,4 +513,13 @@ void Snapdragon::CameraManager::updateFPS( int64_t desired_fps ){
   Initialize(desired_fps, true);
   INFO_PRINT("Finished initialization");
   Start();
+}
+
+void Snapdragon::CameraManager::updateExposure(uint32_t desired_exposure, bool use_manual){
+  manual_exposure_ = use_manual;
+
+}
+
+void Snapdragon::CameraManager::updateGain(uint32_t desired_gain, bool use_manual){
+
 }

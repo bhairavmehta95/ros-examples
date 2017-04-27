@@ -199,6 +199,9 @@ public:
 
   // function to update fps from Dynamic Reconfigure
   void updateFPS(int64_t desired_fps);
+  
+  void updateExposure(uint32_t desired_exposure, bool use_manual);
+  void updateGain(uint32_t desired_gain, bool use_manual);
 
 private: // private class methods.
 
@@ -207,6 +210,7 @@ private: // private class methods.
 private: // class private data members.
   bool initialized_;
   bool running_;
+  bool manual_exposure_, manual_gain_;
 
   Snapdragon::CameraParameters* snap_camera_param_ptr_;
   Snapdragon::CameraConfig*     camera_config_ptr_;
